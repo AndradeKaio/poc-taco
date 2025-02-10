@@ -54,7 +54,7 @@ int main() {
     fillTensor(&W2, 25, 25);
 
 
-    input1.pack();
+    input.pack();
     // W1.pack();
     // W2.pack();
 
