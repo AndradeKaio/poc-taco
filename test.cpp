@@ -34,27 +34,27 @@ void fillTensor(Tensor<double> *t, int n, int k){
 
 int main() {
     // Define tensor dimensions
-    int N = 1024;
+    int N = 2048;
     //out1 = input * W1
     //out2 = out1 * W2
-    Tensor<double> input({N, N}, Format({Dense, Dense}));
+    Tensor<double> input({N, N}, Format({Sparse, Dense}));
 
     Tensor<double> W1({N, N}, Format({Dense, Dense}));
     Tensor<double> W2({N, N}, Format({Dense, Dense}));
 
     Tensor<double> dense({N, N}, Format({Dense, Dense}));
-    Tensor<double> csr({N, N}, Format({Dense, Sparse}));
+    Tensor<double> csr({N, N}, Format({Sparse, Dense}));
 
     Tensor<double> out({N, N}, Format({Dense, Dense}));
     
     Tensor<double> out1, out2;
 
-    fillTensor(&input, 256, 1024);
+    fillTensor(&input, 25, 25);
     fillTensor(&W1, N, N);
-    fillTensor(&W2, N, N);
+    fillTensor(&W2, 25, 25);
 
 
-    // input1.pack();
+    input1.pack();
     // W1.pack();
     // W2.pack();
 
