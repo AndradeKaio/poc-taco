@@ -32,40 +32,38 @@ void fillTensor(Tensor<double> *t, int n, int k){
         t->insert({i,j}, dist(gen));
 }
 
-int main() {
-    // Define tensor dimensions
+
+void sparseExpression(){
     int N = 2048;
     //out1 = input * W1
     //out2 = out1 * W2
-    Tensor<double> input({N, N}, Format({Sparse, Dense}));
+    Format sparse({Dense, Sparse});
 
-    Tensor<double> W1({N, N}, Format({Dense, Dense}));
-    Tensor<double> W2({N, N}, Format({Dense, Dense}));
+    Tensor<double> input({N, N}, sparse);
 
-    Tensor<double> dense({N, N}, Format({Dense, Dense}));
-    Tensor<double> csr({N, N}, Format({Sparse, Dense}));
+    Tensor<double> W1({N, N}, sparse);
+    Tensor<double> W2({N, N}, sparse);
 
-    Tensor<double> out({N, N}, Format({Dense, Dense}));
+    Tensor<double> out1({N, N}, sparse);
     
-    Tensor<double> out1, out2;
+    Tensor<double> out2({N, N}, sparse);
 
-    fillTensor(&input, 25, 25);
+    fillTensor(&input, 256, 256);
     fillTensor(&W1, N, N);
-    fillTensor(&W2, 25, 25);
+    fillTensor(&W2, 256, 256);
 
 
-    input.pack();
+    //input.pack();
     // W1.pack();
     // W2.pack();
 
     // Define tensor index variables
     IndexVar i("i"), j("j"), k("k");
 
-    out1 = csr;
     // out1 = input * W1
     out1(i, j) = sum(k, input(i, k) * W1(k, j));
     // out =  out1 * W2
-    out(i, j) = sum(k, out1(i, k) * W2(k, j));
+    out2(i, j) = sum(k, out1(i, k) * W2(k, j));
 
     out1.pack();
     
@@ -73,13 +71,58 @@ int main() {
     out1.assemble();
     out1.compute();
 
-    out.compile();
-    out.assemble();
-    out.compute();
+    out2.compile();
+    out2.assemble();
+    out2.compute();
+}
 
-    // Print result
-    // std::cout << out << std::endl;
+void denseExpression(){
+    int N = 2048;
+    //out1 = input * W1
+    //out2 = out1 * W2
+    Format dm({Dense,Dense});
 
+    Tensor<double> input({N, N}, dm);
+
+    Tensor<double> W1({N, N}, dm);
+    Tensor<double> W2({N, N}, dm);
+
+    Tensor<double> out1({N, N}, dm);
+    
+    Tensor<double> out2({N, N}, dm);
+
+    fillTensor(&input, 256, 256);
+    fillTensor(&W1, N, N);
+    fillTensor(&W2, 256, 256);
+
+
+    //input.pack();
+    // W1.pack();
+    // W2.pack();
+
+    // Define tensor index variables
+    IndexVar i("i"), j("j"), k("k");
+
+    // out1 = input * W1
+    out1(i, j) = sum(k, input(i, k) * W1(k, j));
+    // out =  out1 * W2
+    out2(i, j) = sum(k, out1(i, k) * W2(k, j));
+
+    out1.pack();
+    
+    out1.compile();
+    out1.assemble();
+    out1.compute();
+
+    out2.compile();
+    out2.assemble();
+    out2.compute();
+}
+
+
+int main() {
+    // denseExpression();
+    sparseExpression();
     return 0;
 }
 
