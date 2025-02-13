@@ -119,7 +119,7 @@ void tacoSparseExpression(bool random){
       fillTacoTensor(&input, 256, 256);
       fillTacoTensor(&W1, N, N);
       fillTacoTensor(&W2, 256, 256);
-    } else {
+    }else{
       fillTacoTensorRandomly(&input, N, 0.9);
       fillTacoTensorRandomly(&W1, N, 0.9);
       fillTacoTensorRandomly(&W2, N, 0.9);
@@ -155,6 +155,7 @@ void tacoSparseExpression(bool random){
 
 void tacoDenseExpression(bool random){
     int N = 2048;
+    int S = 256;
     //out1 = input * W1
     //out2 = out1 * W2
     Format dm({Dense,Dense});
@@ -169,9 +170,9 @@ void tacoDenseExpression(bool random){
     Tensor<double> out2({N, N}, dm);
 
     if(!random){
-      fillTacoTensor(&input, 256, 256);
+      fillTacoTensor(&input, S, S);
       fillTacoTensor(&W1, N, N);
-      fillTacoTensor(&W2, 256, 256);
+      fillTacoTensor(&W2, S, S);
     } else {
       fillTacoTensorRandomly(&input, N, 0.8);
       fillTacoTensorRandomly(&W1, N, 0.8);
@@ -208,8 +209,8 @@ void tacoDenseExpression(bool random){
 
 int main() {
     // denseExpression();
-    //tacoDenseExpression();
-    tacoSparseExpression(true);
+    //tacoDenseExpression(false);
+    tacoSparseExpression(false);
     return 0;
 }
 
